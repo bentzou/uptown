@@ -1,0 +1,134 @@
+#!/bin/bash
+
+##### UPTOWN #####
+#
+# Summary:
+#   Uptown allows you to use arrows keys to navigate up and down your
+#   current path hierarchy.
+#  
+#   Example (using the default config): 
+#     You log in to your terminal and are placed in the home directory:
+#        /Users/johnsmith $>
+#
+#     Press "Alt+Up" to cd into the parent dir
+#        /Users $>
+#
+#     Press "Alt+Down" to cd into the child dir
+#        /Users/johnsmith $>
+#
+# How to use it:
+#   Add a line to your .bash_profile or .bashrc to source this script. Here's
+#   an example:
+#
+#     source ~/foo/bar/uptown
+#
+# How it works:
+#   Uptown remembers your current path hierarchy with the environment variable
+#   "$UPTOWN_PATH." This path is used to find the parent and child directories
+#   relative to your current path. This path is updated when you "cd" out of
+#   the current hierarchy. No other environment variables are used.
+#
+#   Uptown also adds two readline key bindings to trigger "cd"-ing into the
+#   relative parent and child directories.
+#
+# Supported Bash versions:
+#   3.2-4.0
+
+
+##### Configuration #####
+
+# Uptown uses the below key sequences to navigate up and down the current
+#   path hierarchy. You can set your own. To see what byte sequences are sent
+#   to your terminal, run "cat" and try pressing different button combinations.
+
+CD_UP_KEY_SEQUENCE='\e\e[A'
+CD_DOWN_KEY_SEQUENCE='\e\e[B'
+
+# Uptown automatically uses the paths in UPTOWN_DEFAULT_PATHS when possible.
+#   Feel free to add your own.
+
+UPTOWN_DEFAULT_PATHS=(
+   "$HOME/Desktop"
+   "/Applications"
+)
+
+
+##### Script options #####
+
+set -o nounset
+
+
+##### Methods #####
+
+uptown_init () {
+   PROMPT_COMMAND="$PROMPT_COMMAND; uptown_update_path"
+   bind '"'$CD_UP_KEY_SEQUENCE'": "cdu\n"'
+   bind '"'$CD_DOWN_KEY_SEQUENCE'": "cdd\n"'
+}
+
+uptown_update_path () {
+   if ! uptown_is_subpath "$PWD" "$UPTOWN_PATH"; then
+      local default_path=$(uptown_find_default_path_match "$PWD")
+
+      if [ -n "$default_path" ]; then
+         UPTOWN_PATH="$default_path"
+      else
+         UPTOWN_PATH="$PWD"
+      fi
+   fi
+}
+
+uptown_find_default_path_match () {
+   local path
+   for path in "${UPTOWN_DEFAULT_PATHS[@]}"; do
+      uptown_is_subpath "$1" "$path" && echo "$path" && return
+   done
+}
+
+uptown_is_subpath () {
+   local -a new
+   IFS='/' read -r -a new <<< "$1"
+
+   local match=$(uptown_count_path_match "$1" "$2")
+   (( match == ${#new[@]}-1 ))
+}
+
+uptown_count_path_match () {
+   local -a new cur
+   IFS='/' read -r -a new <<< "$1"
+   IFS='/' read -r -a cur <<< "$2"
+
+   local index=1
+   while (( index < ${#new[@]} && index < ${#cur[@]} )); do
+      [ "${cur[index]}" = "${new[index]}" ] && (( ++index )) || break
+   done
+   echo $((index-1))
+}
+
+uptown_get_parent_path () {
+   local path_idx=$(uptown_count_path_match "$PWD" "$UPTOWN_PATH")
+   uptown_subpath_by_idx $((path_idx-1))
+}
+
+uptown_get_child_path () {
+   local path_idx=$(uptown_count_path_match "$PWD" "$UPTOWN_PATH")
+   uptown_subpath_by_idx $((path_idx+1))
+}
+
+uptown_subpath_by_idx () {
+   (( $1 == 0 )) && echo -n "/" && return
+
+   local -a cur
+   IFS='/' read -r -a cur <<< "$UPTOWN_PATH"
+   echo -n "$(printf "/%s" "${cur[@]:0:$1+1}" | cut -c2-)"
+}
+
+cdu () {
+   builtin cd "$(uptown_get_parent_path)"
+}
+
+cdd () {
+   builtin cd "$(uptown_get_child_path)"
+}
+
+uptown_init
