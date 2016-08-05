@@ -105,14 +105,18 @@ uptown_count_path_match () {
    echo $((index-1))
 }
 
-uptown_get_parent_path () {
-   local path_idx=$(uptown_count_path_match "$PWD" "$UPTOWN_PATH")
-   uptown_subpath_by_idx $((path_idx-1))
+uptown_get_only_child_path () {
+   local paths=($(find . ! -path . -type d -maxdepth 1))
+   (( ${#paths[@]} == 1 )) && echo "${paths[0]}"
 }
 
 uptown_get_child_path () {
-   local path_idx=$(uptown_count_path_match "$PWD" "$UPTOWN_PATH")
-   uptown_subpath_by_idx $((path_idx+1))
+   local child_path=$(uptown_get_only_child_path)
+   if [ -z "$child_path" ]; then
+      local path_idx=$(uptown_count_path_match "$PWD" "$UPTOWN_PATH")
+      child_path=$(uptown_subpath_by_idx $((path_idx+1)))
+   fi
+   echo "$child_path"
 }
 
 uptown_subpath_by_idx () {
@@ -124,7 +128,7 @@ uptown_subpath_by_idx () {
 }
 
 cdu () {
-   builtin cd "$(uptown_get_parent_path)"
+   builtin cd ..
 }
 
 cdd () {
