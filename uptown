@@ -48,8 +48,7 @@ CD_DOWN_KEY_SEQUENCE='\e\e[B'
 #   Feel free to add your own.
 
 UPTOWN_DEFAULT_PATHS=(
-   "$HOME/Desktop"
-   "/Applications"
+   "$HOME"
 )
 
 
@@ -67,7 +66,7 @@ uptown_init () {
 }
 
 uptown_update_path () {
-   if ! uptown_is_subpath "$PWD" "$UPTOWN_PATH"; then
+   if ! uptown_is_subpath "$PWD" "${UPTOWN_PATH:-}"; then
       local default_path=$(uptown_find_default_path_match "$PWD")
 
       if [ -n "$default_path" ]; then
@@ -79,6 +78,8 @@ uptown_update_path () {
 }
 
 uptown_find_default_path_match () {
+   [ -z "${UPTOWN_DEFAULT_PATHS:-}" ] && return
+
    local path
    for path in "${UPTOWN_DEFAULT_PATHS[@]}"; do
       uptown_is_subpath "$1" "$path" && echo "$path" && return
