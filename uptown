@@ -82,7 +82,8 @@ uptown_find_default_path_match () {
 
    local path
    for path in "${UPTOWN_DEFAULT_PATHS[@]}"; do
-      uptown_is_subpath "$1" "$path" && echo "$path" && return
+      norm_path=${path/\~/$HOME}
+      uptown_is_subpath "$1" "$norm_path" && echo "$norm_path" && return
    done
 }
 
