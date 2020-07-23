@@ -41,8 +41,8 @@
 #   path hierarchy. You can set your own. To see what byte sequences are sent
 #   to your terminal, run "cat" and try pressing different button combinations.
 
-CD_UP_KEY_SEQUENCE='\e\e[A'
-CD_DOWN_KEY_SEQUENCE='\e\e[B'
+CD_UP_KEY_SEQUENCE='\e[1;9A'
+CD_DOWN_KEY_SEQUENCE='\e[1;9B'
 
 # Uptown automatically uses the paths in UPTOWN_DEFAULT_PATHS when possible.
 #   Feel free to add your own.
