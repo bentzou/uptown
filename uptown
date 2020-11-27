@@ -54,7 +54,7 @@ UPTOWN_DEFAULT_PATHS=(
 
 ##### Script options #####
 
-set -o nounset
+#set -o nounset
 
 
 ##### Methods #####
