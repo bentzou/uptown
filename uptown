@@ -108,7 +108,7 @@ uptown_count_path_match () {
 }
 
 uptown_get_only_child_path () {
-   local paths=($(find . ! -path . -type d -maxdepth 1))
+   local paths=($(find . -maxdepth 1 ! -path . -type d))
    (( ${#paths[@]} == 1 )) && echo "${paths[0]}"
 }
 
