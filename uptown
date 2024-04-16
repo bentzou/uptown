@@ -37,9 +37,13 @@
 
 ##### Configuration #####
 
-# Uptown uses the below key sequences to navigate up and down the current
-#   path hierarchy. You can set your own. To see what byte sequences are sent
-#   to your terminal, run "cat" and try pressing different button combinations.
+# Uptown works by converting your keyboard shortcuts, like opt+up arrow and
+#   opt+down arrow, into unused escape sequences, which are then converted
+#   into commands that shell navigation commands. This can be tricky!
+#
+# By default, the escape sequences are esc + [1;9A and esc + [1;9B. You may
+#   need to confirm your terminal applicaton sends these escape sequences or
+#   update the below variables to match the escape sequences that are sent.
 
 CD_UP_KEY_SEQUENCE='\e[1;9A'
 CD_DOWN_KEY_SEQUENCE='\e[1;9B'
