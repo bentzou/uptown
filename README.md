@@ -31,8 +31,8 @@ Under the hood, two readline bindings map Alt+Arrow to the shell functions `cdu`
 **Terminal escape sequences** are detected automatically. iTerm uses modifier 9; most other terminals (Ghostty, kitty, Terminal.app) use the standard xterm modifier 3. If your terminal sends something different, override the variables before sourcing:
 
 ```bash
-CD_UP_KEY_SEQUENCE='\e[1;3A'
-CD_DOWN_KEY_SEQUENCE='\e[1;3B'
+UPTOWN_UP_KEY_SEQUENCE='\e[1;3A'
+UPTOWN_DOWN_KEY_SEQUENCE='\e[1;3B'
 source ~/path/to/uptown
 ```
 

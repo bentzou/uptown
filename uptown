@@ -16,11 +16,11 @@
 #   the below variables to match the escape sequences your terminal sends.
 
 if [[ "${TERM_PROGRAM:-}" == "iTerm.app" ]]; then
-   CD_UP_KEY_SEQUENCE='\e[1;9A'
-   CD_DOWN_KEY_SEQUENCE='\e[1;9B'
+   UPTOWN_UP_KEY_SEQUENCE='\e[1;9A'
+   UPTOWN_DOWN_KEY_SEQUENCE='\e[1;9B'
 else
-   CD_UP_KEY_SEQUENCE='\e[1;3A'
-   CD_DOWN_KEY_SEQUENCE='\e[1;3B'
+   UPTOWN_UP_KEY_SEQUENCE='\e[1;3A'
+   UPTOWN_DOWN_KEY_SEQUENCE='\e[1;3B'
 fi
 
 # Uptown automatically uses the paths in UPTOWN_DEFAULT_PATHS when possible.
@@ -41,8 +41,8 @@ UPTOWN_DEFAULT_PATHS=(
 uptown_init () {
    [[ "${PROMPT_COMMAND:-}" != *uptown_update_path* ]] && \
       PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}uptown_update_path"
-   bind '"'$CD_UP_KEY_SEQUENCE'": "cdu\n"'
-   bind '"'$CD_DOWN_KEY_SEQUENCE'": "cdd\n"'
+   bind '"'$UPTOWN_UP_KEY_SEQUENCE'": "cdu\n"'
+   bind '"'$UPTOWN_DOWN_KEY_SEQUENCE'": "cdd\n"'
 }
 
 uptown_update_path () {
