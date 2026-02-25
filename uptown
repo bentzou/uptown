@@ -31,11 +31,6 @@ UPTOWN_DEFAULT_PATHS=(
 )
 
 
-##### Script options #####
-
-#set -o nounset
-
-
 ##### Methods #####
 
 uptown_init () {
