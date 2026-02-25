@@ -70,7 +70,8 @@ UPTOWN_DEFAULT_PATHS=(
 ##### Methods #####
 
 uptown_init () {
-   PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}uptown_update_path"
+   [[ "${PROMPT_COMMAND:-}" != *uptown_update_path* ]] && \
+      PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}uptown_update_path"
    bind '"'$CD_UP_KEY_SEQUENCE'": "cdu\n"'
    bind '"'$CD_DOWN_KEY_SEQUENCE'": "cdd\n"'
 }
