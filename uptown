@@ -41,12 +41,18 @@
 #   opt+down arrow, into unused escape sequences, which are then converted
 #   into commands that shell navigation commands. This can be tricky!
 #
-# By default, the escape sequences are esc + [1;9A and esc + [1;9B. You may
-#   need to confirm your terminal applicaton sends these escape sequences or
-#   update the below variables to match the escape sequences that are sent.
+# The escape sequences depend on your terminal application. iTerm uses the
+#   modifier 9 (esc + [1;9A), while most other terminals (Ghostty, kitty, etc.)
+#   use the standard xterm modifier 3 (esc + [1;3A). You may need to update
+#   the below variables to match the escape sequences your terminal sends.
 
-CD_UP_KEY_SEQUENCE='\e[1;9A'
-CD_DOWN_KEY_SEQUENCE='\e[1;9B'
+if [[ "${TERM_PROGRAM:-}" == "iTerm.app" ]]; then
+   CD_UP_KEY_SEQUENCE='\e[1;9A'
+   CD_DOWN_KEY_SEQUENCE='\e[1;9B'
+else
+   CD_UP_KEY_SEQUENCE='\e[1;3A'
+   CD_DOWN_KEY_SEQUENCE='\e[1;3B'
+fi
 
 # Uptown automatically uses the paths in UPTOWN_DEFAULT_PATHS when possible.
 #   Feel free to add your own.
