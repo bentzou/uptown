@@ -91,7 +91,7 @@ uptown_update_path () {
 uptown_find_default_path_match () {
    [ -z "${UPTOWN_DEFAULT_PATHS:-}" ] && return
 
-   local path
+   local path norm_path
    for path in "${UPTOWN_DEFAULT_PATHS[@]}"; do
       norm_path=${path/\~/$HOME}
       uptown_is_subpath "$1" "$norm_path" && echo "$norm_path" && return
