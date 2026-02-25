@@ -1,31 +1,50 @@
 # Uptown
 
-## Summary
-Uptown allows you to use arrows keys to navigate up and down your current path hierarchy.
+Navigate your directory hierarchy with Alt+Arrow keys.
 
-### Example
+```
+/Users/johnsmith/Code/myproject $>   # press Alt+Up
+/Users/johnsmith/Code $>             # press Alt+Up
+/Users/johnsmith $>                  # press Alt+Down
+/Users/johnsmith/Code $>             # press Alt+Down
+/Users/johnsmith/Code/myproject $>
+```
 
-You log in to your terminal and are placed in the home directory:
-
-```/Users/johnsmith $>```
-
-Press "Alt+Up" to cd into the parent dir
-
-```/Users $>```
-
-Press "Alt+Down" to cd into the child dir:
-
-```/Users/johnsmith $>```
+Uptown remembers where you've been. When you go up, it knows how to come back down.
 
 ## Install
-Add a line to your .bash_profile or .bashrc to source this script. Here's an example:
 
-```source ~/foo/bar/uptown```
+Source the script from your `.bashrc` or `.bash_profile`:
+
+```bash
+source ~/path/to/uptown
+```
 
 ## How it works
-Uptown remembers your current path hierarchy with the environment variable "$UPTOWN_PATH." This path is used to find the parent and child directories relative to your current path. This path is updated when you "cd" out of the current hierarchy. No other environment variables are used.
 
-Uptown also adds two readline key bindings to trigger "cd"-ing into the relative parent and child directories.
+Uptown tracks your position in the directory tree using a single environment variable, `$UPTOWN_PATH`. When you navigate up with Alt+Up, your place is saved. When you navigate down with Alt+Down, Uptown follows the saved path back. If no saved path exists but the current directory has exactly one subdirectory, Uptown descends into it automatically.
+
+Under the hood, two readline bindings map Alt+Arrow to the shell functions `cdu` (up) and `cdd` (down).
+
+## Configuration
+
+**Terminal escape sequences** are detected automatically. iTerm uses modifier 9; most other terminals (Ghostty, kitty, Terminal.app) use the standard xterm modifier 3. If your terminal sends something different, override the variables before sourcing:
+
+```bash
+CD_UP_KEY_SEQUENCE='\e[1;3A'
+CD_DOWN_KEY_SEQUENCE='\e[1;3B'
+source ~/path/to/uptown
+```
+
+**Default paths** let Uptown automatically pick up context when you `cd` into a known tree. By default, `$HOME` is included. Add your own:
+
+```bash
+UPTOWN_DEFAULT_PATHS=(
+   "$HOME"
+   "/opt/projects"
+)
+```
 
 ## Supported Bash versions
-3.2-4.0
+
+3.2+
